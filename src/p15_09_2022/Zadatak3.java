@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 
 public class Zadatak3 {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 //		Napisati program koji:
 //			Ucitava stranicu  https://www.ebay.com/
 //			Zatim iz selekta za kategoriju povlaci sve opcije. Koristan link
@@ -39,7 +39,8 @@ public class Zadatak3 {
 	      int broj = random.nextInt(op.size());
 	      s.selectByVisibleText(op.get(broj).getText());
 	      
-	      
+	      Thread.sleep(5000);
+	      driver.quit();
 	      
 	}
 

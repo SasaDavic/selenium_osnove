@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.Select;
 
 public class Zadatak2 {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 //		Zadatak (dok ne stignemo do ovog zadatka izguglajte kako da selektujete vrednost u select elementu)
 //
 //		Napisati program koji ucitava stranicu https://www.ebay.com/ i bira kategoriju “Crafts”
@@ -26,10 +26,11 @@ public class Zadatak2 {
 //		// Select the option by index
 //		se.selectByIndex(3);
 		
-		Select s = new Select(driver.findElement(By.xpath("//*[@id='gh-cat']"))) ;
+		Select s = new Select(driver.findElement(By.xpath("//*[@id='gh-cat']")));
 		s.selectByVisibleText("Crafts");
 
-
+		Thread.sleep(5000);
+		driver.quit();
 	}
 
 }
