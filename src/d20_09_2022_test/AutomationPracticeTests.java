@@ -3,10 +3,12 @@ package d20_09_2022_test;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -17,8 +19,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import d20_09_2022_pages.BuyBoxPage;
+import d20_09_2022_pages.HeaderPage;
 import d20_09_2022_pages.LayerCartPage;
+import d20_09_2022_pages.TopMenuPage;
 
+import org.testng.asserts.SoftAssert;
 
 public class AutomationPracticeTests {
 	
@@ -27,6 +32,8 @@ public class AutomationPracticeTests {
 	private String baseUrl = "http://automationpractice.com/";
 	private BuyBoxPage buyBoxPage;
 	private LayerCartPage layerCartPage;
+	private HeaderPage headerPage;
+	private TopMenuPage topMenuPage;
 	
 	@BeforeClass 
 	public void setup() {
@@ -38,6 +45,8 @@ public class AutomationPracticeTests {
 		wait = new WebDriverWait(driver, Duration.ofSeconds(10));	
 		buyBoxPage = new BuyBoxPage(driver, wait);
 		layerCartPage = new LayerCartPage(driver, wait);
+		headerPage = new HeaderPage(driver, wait);
+		topMenuPage = new TopMenuPage(driver, wait);
 	}
 	@BeforeMethod
 	public void beforeMethod() {
@@ -133,7 +142,52 @@ public class AutomationPracticeTests {
 				"Order - My Store",
 				"Wrong page");
 	}
-	
+	@Test(priority = 20)
+	public void topMenuMouseOver() throws InterruptedException {
+		new Actions(driver).moveToElement(topMenuPage.getWomenElement()).perform();
+		topMenuPage.waitSubMenuWomenVisibility();
+		Assert.assertTrue(topMenuPage.getSubMenuWomen().isDisplayed(), "Women submenu should be displayed");
+
+		new Actions(driver).moveToElement(topMenuPage.getDressesElement()).perform();
+		topMenuPage.waitSubMenuDressesVisibility();
+		Assert.assertTrue(topMenuPage.getSubMenuDresses().isDisplayed(), "Dresses submenu should be displayed");
+
+		new Actions(driver).moveToElement(topMenuPage.getTShirtsElement()).perform();
+		topMenuPage.waitSubMenuDressesInvisibility();
+		Assert.assertTrue(!topMenuPage.getSubMenuWomen().isDisplayed(), "Women submenu should be hidden");
+		Assert.assertTrue(!topMenuPage.getSubMenuDresses().isDisplayed(), "Dresses submenu should be hidden");
+
+		
+	}
+
+	@Test
+	public void phoneNumberVisibilityCheckOnResize() throws InterruptedException {
+		Assert.assertTrue(headerPage.getShopPhoneElement().isDisplayed(), "Phone number should be visible when maximized");
+
+		Dimension dimension = new Dimension(767, 700);
+		driver.manage().window().setSize(dimension);
+		Assert.assertTrue(!headerPage.getShopPhoneElement().isDisplayed(), "Phone number should be hidded when 767 x 700");
+
+		dimension = new Dimension(768, 700);
+		driver.manage().window().setSize(dimension);
+		wait.until(ExpectedConditions.visibilityOf(headerPage.getShopPhoneElement()));
+		Assert.assertTrue(headerPage.getShopPhoneElement().isDisplayed(), "Phone number should be visible when 768 x 700");
+
+		driver.manage().window().maximize();
+
+		
+	}
+
+	@Test
+	public void headerLinksCheck() throws InterruptedException {
+		headerPage.getContactUsLink().click();
+		Assert.assertTrue(driver.getTitle().equals("Contact us - My Store"), "Title should be Contact us - My Store");
+
+		headerPage.getSignInLink().click();
+		Assert.assertTrue(driver.getTitle().equals("Login - My Store"), "Title should be Login - My Store");
+
+		
+	}
 	
 	
 	
